@@ -103,6 +103,8 @@ class Chord():
         return score
         
     def generate(self):
+        if not self._test_correctness(): return None
+
         uses = dict()
         for tone in self.tones: uses[tone] = 0
         now = []
@@ -143,17 +145,18 @@ class Chord():
         self.best = all
 
     def get(self):
+        if not self._test_correctness(): return []
+
         if self.best is None:
             self.generate()
         return list(map(lambda x: x[2], self.best))
 
-    def _test_input(self):
+    def _test_correctness(self):
         try:
-            assert type(self.name) == str
-            assert type(self.H_notation) == bool
             assert type(self.strings) == list
+            assert len(self.strings) <= 12
             for st in self.strings:
-                assert type(st) == str
+                assert type(st) == int
             return True
         except AssertionError:
             self.error("Wrong input parameters")
