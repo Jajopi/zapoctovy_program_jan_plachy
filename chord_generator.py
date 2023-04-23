@@ -84,7 +84,7 @@ class Chord():
             if pos[i] is not None and pos[i] > 0:
                 first = min(first, i)
                 last = max(last, i)
-        score /= last - first + 1
+        if last > first - 1: score /= last - first + 1
 
         for val in uses.values():
             score *= val
@@ -155,6 +155,7 @@ class Chord():
         try:
             assert type(self.strings) == list
             assert len(self.strings) <= 12
+            assert len(self.strings) > 0
             for st in self.strings:
                 assert type(st) == int
             return True
@@ -234,14 +235,14 @@ class Program():
                 str(handspan), str(fingers),
                 str(barability), str(use_H)))
         if history_name in self.chords_memory.keys():
-            chords = self.chords_memory[history_name]
+            ch = self.chords_memory[history_name]
         else:
             ch = Chord(name, strings, use_H, handspan, fingers, barability)
-            chords = ch.get()
-        self.chords_history.append(chords)
-        self.chords_memory[history_name] = chords
+            #chords = ch.get()
+            self.chords_history.append(ch)
+            self.chords_memory[history_name] = ch
 
-        self.chords_actual = chords
+        self.chords_history_index = len(self.chords_history) - 1
         string_list = list()
         for s in strings:
             if s.upper() == s.lower() or (use_H and s == "B"):
@@ -253,14 +254,16 @@ class Program():
         self.chord_to_display = 0
 
     def show_chord(self):
+        chord = self.chords_history[self.chords_history_index].get()
+
         can = self.canvas
         w, h = self.cw, self.ch
-        if len(self.chords_actual) < 1:
+        if len(chord) < 1:
             can.delete("all")
             can.create_text(w // 2, h // 2, text="No matching chords",
                     font=self.small_font)
             return None
-        ch = self.chords_actual[self.chord_to_display]
+        ch = chord[self.chord_to_display]
         l = len(ch)
         v = int(self.handspan_scale.get()) + 1
         x = w // (l + 2)
@@ -307,9 +310,41 @@ class Program():
         self.show_chord()
 
     def next_chord(self):
-        if self.chord_to_display >= len(self.chords_actual) - 1: return None
+        chord = self.chords_history[self.chords_history_index].get()
+        if self.chord_to_display >= len(chord) - 1: return None
         self.chord_to_display += 1
         self.show_chord()
+    
+    def show_history_previous(self):
+        if self.chords_history_index < 1: return None
+        self.chords_history_index -= 1
+        self.show_chord()
+        self.rewrite_others()
+
+    def show_history_next(self):
+        if self.chords_history_index > len(self.chords_history) - 2: return None
+        self.chords_history_index += 1
+        self.chord_to_display = 0
+        self.show_chord()
+        self.rewrite_others()
+    
+    def clear_history(self):
+        self.chords_history = [self.chords_history[self.chords_history_index]]
+        self.chords_history_index = 0
+        self.chord_to_display = 0
+        self.chords_memory = dict()
+        self.generate_chord_button()
+    
+    def rewrite_others(self):
+        ch = self.chords_history[self.chords_history_index]
+        self.string_names.delete(0, "end")
+        self.string_names.insert(0, "".join(ch.string_names))
+        self.chord_name.delete(0, "end")
+        self.chord_name.insert(0, ch.name)
+        self.handspan_scale.set(ch.handspan)
+        self.fingers_scale.set(ch.fingers)
+        self.barability_variable.set(ch.barability)
+        self.use_H_variable.set(ch.H_notation)
 
     def resize(self):
         strings = self.string_names.get()
@@ -433,18 +468,20 @@ class Program():
         self.root.config(menu=menubar)
         menubar.add_command(label="Exit", command=self.exit,
                 underline=0)
-        menubar.add_separator()
         menubar.add_command(label="Help", command=self.program_help,
                 underline=0)
-        menubar.add_separator()
         menubar.add_command(label="About", command=self.program_about,
                 underline=0)
-        menubar.add_separator()
-        menubar.add_command(label="Generate", 
+        menubar.add_command(label="Generate",
                 command=self.generate_chord_button, underline=0)
-        menubar.add_separator()
-        menubar.add_command(label="Resize", 
+        menubar.add_command(label="Resize",
                 command=self.resize, underline=0)
+        menubar.add_command(label="History: previous", 
+                command=self.show_history_previous, underline=9)
+        menubar.add_command(label="History: next",
+                command=self.show_history_next, underline=9)
+        menubar.add_command(label="Clear history",
+                command=self.clear_history, underline=0)
 
         self.root.bind("<Escape>", lambda e: self.exit())
 

@@ -18,3 +18,14 @@ a je možné cyklicky meniť veľkosť okna podľa preferencie používateľa (A
 Generovanie akordov sa spúšťa pomocou Alt + G alebo stlačením Enter s kurzorom
 v políčku s názvom akordu.
 Stlačenie Enter s kurzorom v políčku so strunami presunie kurzor do políčka s akordom.
+
+K predtým vygenerovaným akorodom sa dá dostať pomocou histórie, v ktorej je možné
+pohybovať sa oboma smermi až po prvý a posledný generovaný akord, pričom nový
+akord sa vždy zaradí na koniec histórie.
+Pohyb do minulosti funguje pomocou Alt + P, do budúcnosti pomocou Alt + N
+
+Už vygenerované akordy sú stále zapamätané, čo sa dá vyriešiť pomocou vymazania histórie
+klávesovou skratkou Alt + C.
+
+Všetky klávesové skratky spúšťajú príkazy vo vrchnom menu programu, preto sa dajú
+spustiť aj myšou.
