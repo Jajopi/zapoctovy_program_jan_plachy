@@ -504,6 +504,10 @@ class Program():
 Generátor akordov.
 Vytvoril Ján Plachý ako zápočtový program na programovanie 1, 2022/23.
 Kontakt: plachyj8@natur.cuni.cz
+
+Guitar chord generator.
+Made by Ján Plachý as a semestral project for programing 1, 2022/23.
+plachyj8@natur.cuni.cz
 """)
 
     def program_help(self):
@@ -531,4 +535,4 @@ The "H > B" checkbox declares the use of letter H (and B for Hb) instead of B.
 
 
 if __name__ == "__main__":
-    __program__ = Program()
+    _chord_generator_ = Program()
