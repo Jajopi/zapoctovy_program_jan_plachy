@@ -1,4 +1,3 @@
-TODO dokončenie tejto časti dokumentácie
 
 # Chord generator
 
@@ -47,7 +46,7 @@ Ak ani takéto neexistujú, výstupom je prázdny zoznam.
 
 Výstup poskytuje metóda .get(), ktorá mimo iné spustí .generate(),
 ak sa tak ešte nestalo, a vráti zoznam možností v poradí podľa skóre,
-od najleopšieho po najhorší, ale bez samotného skóre (keďže to je
+od najlepšieho po najhorší, ale bez samotného skóre (keďže to je
 dôležité len interne a neposkytuje žiadnu hodnotu použiteľnú mimo
 heuristiky).
 
@@ -55,13 +54,17 @@ heuristiky).
 
 Táto trieda implementuje grafické rozhranie prostredníctvom knižnice
 tkinter, teda okienkovú aplikáciu, ktorá s ovláda klávesnicou a myšou.
-Jej veľkosť je možné najstaviť na niektorú z možností.
+Jej veľkosť je možné najstaviť na niektorú z možností,
+pričom po každej zmene sa jednotlivé widgety zničia a znova vytvoria
+v inej veľkosti.
 
-Sprostredkováva získavanie vstupu od uživateľa a výtvaranie
+Tiež sprostredkováva získavanie vstupu od uživateľa a výtvaranie
 zodpovedajúcich objektov Chord, ktoré zároveň nechá vygenerovať
 a získa z nich všetky valídne možnosti, ktoré potom zobrazí.
+Jednotlivé objekty si pamätá a v prípade zadania už vygenerovaného
+akordu alebo posúvania sa v histórií akordy nevytvára znova,
+ale použije tie už vygenerované.
 Medzi jednotlivými možnosťami je možné sa presúvať, takisto je možné
-vrátiť sa k predtým vygenerovaným akordom cez históriu,
-ktorú tiež uchováva objekt tejto triedy.
+vrátiť sa k predtým vygenerovaným akordom cez históriu.
 
 Umožňuje tiež zobraziť informácie o programe a návod na použitie.
